@@ -120,7 +120,7 @@
         <article class="article content gallery" itemscope itemprop="blogPost">
     <h1 class="article-title is-size-3 is-size-4-mobile" itemprop="name">
         
-            <a href="/2020/08/02/hello-world/" itemprop="url">Hello World</a>
+            <a href="/2020/08/02/hello-world/" itemprop="url">Training Word Embedding on Bloomberg News</a>
         
     </h1>
     <div class="article-meta columns is-variable is-1 is-multiline is-mobile is-size-7-mobile">
@@ -137,13 +137,14 @@
         <span class="column is-narrow">
             
             
-            a minute read (About 190 words)
+            2 minutes read (About 314 words)
         </span>
         
     </div>
     <div class="article-entry is-size-6-mobile" itemprop="articleBody">
     
-        <html><head></head><body><p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+        <html><head></head><body><p>While working from home (stuck at home indeed), I get a lot more extra time, so last month I revisited the old deep learning course, then thought it would be awesome if I can come up with some projects to play with, as we all know knowledge would go rusty if lack of use&#x2026;</p>
+<p>Initially, I was thinking about a machine translator using Attention Models, because I was once asked about it in an interview. The fund showed a particular interest in developing such a tool for purpose of distributing their research reports to other countries. However, the thousands-of-dollar worth dataset set me back. If labeled dataset is hard to get, why not running some unsurprised learning?  Training word2vec got off the top of my head. I&#x2019;ve been writing views on FICC (fixed income, currencies, and commodities) on my other non-geeky-at-all blog, won&#x2019;t it be fun to run word embedding on Bloomberg views, see if people talk about the right things when they analyze inflation and gold prices?</p>
 <h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">def scrape_bloomberg_urls(subject, maxPage, headers):</span><br><span class="line">    urls = []</span><br><span class="line">    <span class="hljs-keyword">for</span> p <span class="hljs-keyword">in</span> range(1,maxPage):</span><br><span class="line">        searchUrl = <span class="hljs-string">&apos;https://www.bloomberg.com/search?query=&apos;</span> + subject + <span class="hljs-string">&apos;&amp;sort=relevance:desc&apos;</span> + <span class="hljs-string">&apos;&amp;page=&apos;</span> + str(p)</span><br><span class="line">        response = requests.get(searchUrl, headers=headers)</span><br><span class="line">        soup = BeautifulSoup(response.content, <span class="hljs-string">&apos;html.parser&apos;</span>)</span><br><span class="line">        regex = re.compile(<span class="hljs-string">&apos;.*headline.*&apos;</span>)</span><br><span class="line">        <span class="hljs-keyword">for</span> tag <span class="hljs-keyword">in</span> soup.findAll(<span class="hljs-string">&apos;a&apos;</span>, {<span class="hljs-string">&quot;class&quot;</span> : regex}, href = True):</span><br><span class="line">            href = tag.attrs[<span class="hljs-string">&apos;href&apos;</span>]</span><br><span class="line">            <span class="hljs-keyword">if</span> <span class="hljs-string">&apos;/news/articles/&apos;</span> <span class="hljs-keyword">in</span> href and href not <span class="hljs-keyword">in</span> urls:</span><br><span class="line">                urls.append(href)            </span><br><span class="line">    <span class="hljs-built_in">return</span> urls</span><br></pre></td></tr></tbody></table></figure>
 
 <p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
