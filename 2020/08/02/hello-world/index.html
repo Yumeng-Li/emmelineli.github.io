@@ -25,7 +25,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://yumeng-li.github.io/pics/embeddingVectors.png">
 <meta property="article:published_time" content="2020-08-03T02:52:13.685Z">
-<meta property="article:modified_time" content="2020-08-07T23:59:52.193Z">
+<meta property="article:modified_time" content="2020-08-08T03:09:32.825Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://yumeng-li.github.io/pics/embeddingVectors.png">
@@ -142,7 +142,7 @@
         <span class="column is-narrow">
             
             
-            3 minutes read (About 461 words)
+            4 minutes read (About 561 words)
         </span>
         
     </div>
@@ -153,17 +153,23 @@
 <p>Now let&#x2019;s rock!</p>
 <p>First it&#x2019;s a bit introduction of word embedding. The term refers to a set of techniques in natural language processing that can map words into high dimensional vectors of real numbers. The vectors or embeddings can be seen as featurized representations of words, which preserve semantic properties and hence are commonly used as inputs in NPL tasks.</p>
 <p>Here is an example, </p>
-<img src="http://yumeng-li.github.io/pics/embeddingVectors.png" alt="drawing" width="450">
-
+<img src="http://yumeng-li.github.io/pics/embeddingVectors.png" alt="embedding vectors" width="450">
 
 <p>While in real cases, the dimension of vectors is usually a lot higher.</p>
-<p>Word2vec is one of the word embedding techniques, also the tool that we are going to use today. </p>
+<p>We will use a tool called word2vec to convert words into embeddings, <a target="_blank" rel="noopener" href="https://radimrehurek.com/gensim/">gensim</a> has it implemented in an easy-to-use way. </p>
+<p><a target="_blank" rel="noopener" href="https://www.wikiwand.com/en/Word2vec">Wiki</a></p>
 <blockquote>
 <p>Word2vec is a technique for natural language processing. The word2vec algorithm uses a neural network model to learn word associations from a large corpus of text. <strong>Once trained, such a model can detect synonymous words or suggest additional words for a partial sentence.</strong></p>
 </blockquote>
-<h2 id="Scarping-Bloomberg-News"><a href="#Scarping-Bloomberg-News" class="headerlink" title="Scarping Bloomberg News"></a>Scarping Bloomberg News</h2><h3 id="Scarping-Bloomberg-News-1"><a href="#Scarping-Bloomberg-News-1" class="headerlink" title="Scarping Bloomberg News"></a>Scarping Bloomberg News</h3><figure class="highlight bash hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">def scrape_bloomberg_urls(subject, maxPage, headers):</span><br><span class="line">    urls = []</span><br><span class="line">    <span class="hljs-keyword">for</span> p <span class="hljs-keyword">in</span> range(1,maxPage):</span><br><span class="line">        searchUrl = <span class="hljs-string">&apos;https://www.bloomberg.com/search?query=&apos;</span> + subject + <span class="hljs-string">&apos;&amp;sort=relevance:desc&apos;</span> + <span class="hljs-string">&apos;&amp;page=&apos;</span> + str(p)</span><br><span class="line">        response = requests.get(searchUrl, headers=headers)</span><br><span class="line">        soup = BeautifulSoup(response.content, <span class="hljs-string">&apos;html.parser&apos;</span>)</span><br><span class="line">        regex = re.compile(<span class="hljs-string">&apos;.*headline.*&apos;</span>)</span><br><span class="line">        <span class="hljs-keyword">for</span> tag <span class="hljs-keyword">in</span> soup.findAll(<span class="hljs-string">&apos;a&apos;</span>, {<span class="hljs-string">&quot;class&quot;</span> : regex}, href = True):</span><br><span class="line">            href = tag.attrs[<span class="hljs-string">&apos;href&apos;</span>]</span><br><span class="line">            <span class="hljs-keyword">if</span> <span class="hljs-string">&apos;/news/articles/&apos;</span> <span class="hljs-keyword">in</span> href and href not <span class="hljs-keyword">in</span> urls:</span><br><span class="line">                urls.append(href)            </span><br><span class="line">    <span class="hljs-built_in">return</span> urls</span><br></pre></td></tr></tbody></table></figure>
+<p>More explanation on word2vec can be found <a target="_blank" rel="noopener" href="https://www.wikiwand.com/en/Word2vec">here</a></p>
+<h2 id="Create-Corpus"><a href="#Create-Corpus" class="headerlink" title="Create Corpus"></a>Create Corpus</h2><h3 id="Scarping-Links-to-Bloomberg-Articles"><a href="#Scarping-Links-to-Bloomberg-Articles" class="headerlink" title="Scarping Links to Bloomberg Articles"></a>Scarping Links to Bloomberg Articles</h3><p>I would like to run the embeddings only on the most recent articles, so first need to grab their urls through a search page.</p>
+<p>Import the libraries,</p>
+<figure class="highlight bash hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line">import requests</span><br><span class="line">from bs4 import BeautifulSoup</span><br><span class="line">import string</span><br><span class="line">import gensim.models.word2vec as word2vec</span><br><span class="line">from time import sleep</span><br><span class="line">import numpy as np</span><br></pre></td></tr></tbody></table></figure>
+<p>A function that can scrape the urls of articles that show up in the top p pages related to a specific topic,</p>
+<figure class="highlight bash hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">def scrape_bloomberg_urls(subject, maxPage, headers):</span><br><span class="line">    urls = []</span><br><span class="line">    <span class="hljs-keyword">for</span> p <span class="hljs-keyword">in</span> range(1,maxPage):</span><br><span class="line">        searchUrl = <span class="hljs-string">&apos;https://www.bloomberg.com/search?query=&apos;</span> + subject + <span class="hljs-string">&apos;&amp;sort=relevance:desc&apos;</span> + <span class="hljs-string">&apos;&amp;page=&apos;</span> + str(p)</span><br><span class="line">        response = requests.get(searchUrl, headers=headers)</span><br><span class="line">        soup = BeautifulSoup(response.content, <span class="hljs-string">&apos;html.parser&apos;</span>)</span><br><span class="line">        regex = re.compile(<span class="hljs-string">&apos;.*headline.*&apos;</span>)</span><br><span class="line">        <span class="hljs-keyword">for</span> tag <span class="hljs-keyword">in</span> soup.findAll(<span class="hljs-string">&apos;a&apos;</span>, {<span class="hljs-string">&quot;class&quot;</span> : regex}, href = True):</span><br><span class="line">            href = tag.attrs[<span class="hljs-string">&apos;href&apos;</span>]</span><br><span class="line">            <span class="hljs-keyword">if</span> <span class="hljs-string">&apos;/news/articles/&apos;</span> <span class="hljs-keyword">in</span> href and href not <span class="hljs-keyword">in</span> urls:</span><br><span class="line">                urls.append(href)            </span><br><span class="line">    <span class="hljs-built_in">return</span> urls</span><br></pre></td></tr></tbody></table></figure>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
+
+
 <h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></tbody></table></figure>
 
 <p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
