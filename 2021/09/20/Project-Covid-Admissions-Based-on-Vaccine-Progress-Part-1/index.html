@@ -24,8 +24,9 @@
 <meta property="og:description" content="Lately I&amp;#x2019;ve been working on a project projecting credit loss for mortgages with a bunch of loan-level attributes. To be honest, the data wasn&amp;#x2019;t rich. In pursuit of good predictive power,">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://yumeng-li.github.io/pics/coviddata.png">
+<meta property="og:image" content="https://render.githubusercontent.com/render/math?math=e^{i \pi} = -1">
 <meta property="article:published_time" content="2021-09-21T03:50:28.000Z">
-<meta property="article:modified_time" content="2021-09-21T03:55:10.224Z">
+<meta property="article:modified_time" content="2021-09-21T04:02:35.755Z">
 <meta property="article:author" content="Yumeng Li">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://yumeng-li.github.io/pics/coviddata.png">
@@ -140,7 +141,7 @@
         <span class="column is-narrow">
             
             
-            2 minutes read (About 366 words)
+            3 minutes read (About 505 words)
         </span>
         
     </div>
@@ -152,13 +153,33 @@
 
 <p>Then let&#x2019;s create the train/test set to use for all the models below.</p>
 <figure class="highlight bash hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">def define_variables(data,date0):</span><br><span class="line">        N=len(data)</span><br><span class="line">        T=(data[<span class="hljs-string">&quot;date&quot;</span>]-date0).dt.days</span><br><span class="line">        X=data[<span class="hljs-string">&quot;vaccinated&quot;</span>].copy().to_frame()</span><br><span class="line">        X[<span class="hljs-string">&quot;T&quot;</span>]=T</span><br><span class="line">        X[<span class="hljs-string">&quot;T2&quot;</span>]=T**2</span><br><span class="line">        P=data[<span class="hljs-string">&quot;population&quot;</span>]</span><br><span class="line">        X[<span class="hljs-string">&quot;const&quot;</span>]=np.ones(N)</span><br><span class="line">        <span class="hljs-built_in">return</span> X,P</span><br><span class="line"></span><br><span class="line">start_train=<span class="hljs-string">&quot;2021-07-01&quot;</span></span><br><span class="line">end_train=<span class="hljs-string">&quot;2021-07-31&quot;</span></span><br><span class="line">event=<span class="hljs-string">&quot;admissions&quot;</span></span><br><span class="line">mask = (data[<span class="hljs-string">&apos;date&apos;</span>] &gt;= start_train) &amp; (data[<span class="hljs-string">&apos;date&apos;</span>] &lt;= end_train)</span><br><span class="line">train_data=data[mask].copy()</span><br><span class="line">X_train,P_train=covid.define_variables(train_data,date0)</span><br><span class="line">Y_train=train_data[event]</span><br></pre></td></tr></tbody></table></figure>
+<h2 id="Weighted-Multi-period-Regression"><a href="#Weighted-Multi-period-Regression" class="headerlink" title="Weighted Multi-period Regression"></a>Weighted Multi-period Regression</h2><img src="https://render.githubusercontent.com/render/math?math=e^{i \pi} = -1">
+\begin{eqnarray}
+    &amp;\eta_i &amp;=c + \beta_1 x_i  + \beta_2 t_i + \beta_3 t_i^2 \\
+    \mathbb{E}(y_i|x_i) =&amp; \hat{y}_i &amp;= \eta_i  \\
+    &amp;p(y_i|x_i) &amp; = N(\hat{y_i},\sigma^2)
+\end{eqnarray}
+where 
+where 
+- Each observation $i$ represents a single state at one particular date.
+- $y_i$ is the number of events on that state.
+- $\hat{y}_i$ is the *predicted* number of events on that state.
+- $x_i$ is the percentage of the state population fully vaccinated on that state.
+- $t_i$ is the number of days elapsed since the beginning of the training period.
+- $\sigma^2$ is the level of *noise* of the observations (the variance of the residuals).
+- the parameters $c$ and $\beta_1,\beta_2,\beta_3$ will be fitted to the observed data to maximize agreement with the model
+
+
+
 </body></html>
     
     </div>
     
     
     <div class="columns is-mobile is-multiline article-nav">
-        <span class="column is-12-mobile is-half-desktop is-hidden-mobile article-nav-prev">
+        <span class="column is-12-mobile is-half-desktop  article-nav-prev">
+            
+            <a href="/2021/09/20/Covid_WeightedLinearRegression/"></a>
             
         </span>
         <span class="column is-12-mobile is-half-desktop  article-nav-next">
