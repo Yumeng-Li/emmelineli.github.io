@@ -448,7 +448,7 @@ Calculate the R-squared again, still, not good enough.So let&apos;s take a deep 
 <h2 id="Day-of-the-Week-Effects"><a href="#Day-of-the-Week-Effects" class="headerlink" title="Day of the Week Effects"></a>Day of the Week Effects</h2><p>Before we move on to GLM, there&#x2019;s another trick to play with. The data reporting obviously has day of the week effects,</p>
 <figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">aggregate=data.groupby([<span class="hljs-string">&quot;date&quot;</span>])[event].sum()</span><br><span class="line">aggregate=aggregate.to_frame().reset_index()</span><br><span class="line">aggregate.plot(x=<span class="hljs-string">&quot;date&quot;</span>,y=event)</span><br></pre></td></tr></tbody></table></figure>
 
-<img src="http://yumeng-li.github.io/projectcovid_files/projectcovid_55_0.png">
+<img src="http://yumeng-li.github.io/projectcovid_files/projectcovid_55_1.png">
 
 
 <p>We use a new function to generate the train data, more dummy variables are added to represent days of a week,</p>
