@@ -24,12 +24,12 @@
 <meta property="og:description" content="Lately I&amp;#x2019;ve been working on a project projecting credit loss for mortgages with a bunch of loan-level attributes. To be honest, the data wasn&amp;#x2019;t rich. In pursuit of good predictive power,">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://yumeng-li.github.io/projectcovid_files/projectcovid_43_0.png">
-<meta property="og:image" content="http://yoursite.com/2021/09/21/projectcovid/projectcovid_files/projectcovid_45_0.png">
-<meta property="og:image" content="http://yoursite.com/2021/09/21/projectcovid/projectcovid_files/projectcovid_49_0.png">
-<meta property="og:image" content="http://yoursite.com/2021/09/21/projectcovid/projectcovid_files/projectcovid_53_0.png">
-<meta property="og:image" content="http://yoursite.com/2021/09/21/projectcovid/projectcovid_files/projectcovid_55_1.png">
+<meta property="og:image" content="http://yumeng-li.github.io/projectcovid_files/projectcovid_45_0.png">
+<meta property="og:image" content="http://yumeng-li.github.io/projectcovid_files/projectcovid_49_0.png">
+<meta property="og:image" content="http://yumeng-li.github.io/projectcovid_files/projectcovid_53_0.png">
+<meta property="og:image" content="http://yumeng-li.github.io/projectcovid_files/projectcovid_55_0.png">
 <meta property="article:published_time" content="2021-09-21T20:37:06.431Z">
-<meta property="article:modified_time" content="2021-09-21T21:41:39.803Z">
+<meta property="article:modified_time" content="2021-09-21T21:45:35.776Z">
 <meta property="article:author" content="Yumeng Li">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://yumeng-li.github.io/projectcovid_files/projectcovid_43_0.png">
@@ -144,7 +144,7 @@
         <span class="column is-narrow">
             
             
-            17 minutes read (About 2476 words)
+            16 minutes read (About 2456 words)
         </span>
         
     </div>
@@ -429,8 +429,9 @@ Calculate the R-squared again, still, not good enough.So let&apos;s take a deep 
 <p>Don&#x2019;t have to say much, you can tell the weighted linear model doesn&#x2019;t fit well as the corelation between vaccinations and admissions looks more like a curve than a straight line.</p>
 <figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">covid.plot_time_facets(train_data,res,event,date0)</span><br></pre></td></tr></tbody></table></figure>
 
+<img src="http://yumeng-li.github.io/projectcovid_files/projectcovid_45_0.png">
 
-<p><img src="projectcovid_files/projectcovid_45_0.png" alt="png"></p>
+
 <p>We can further plot out the residuals. I choose one date from the dates above, Aug.15 and apply the following function to generate its residual plot.</p>
 <figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">plot_residuals</span>(<span class="hljs-params">data,event,res</span>):</span></span><br><span class="line">    P=data[<span class="hljs-string">&quot;population&quot;</span>]</span><br><span class="line">    <span class="hljs-comment"># Create two subplots and unpack the output array immediately</span></span><br><span class="line">    f, (ax1, ax2) = plt.subplots(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>,sharex=<span class="hljs-literal">True</span>,figsize=(<span class="hljs-number">16</span>,<span class="hljs-number">4</span>))</span><br><span class="line">    norm=matplotlib.colors.LogNorm(vmin=<span class="hljs-number">100</span>_000, vmax=P.max(), clip=<span class="hljs-literal">False</span>)</span><br><span class="line">    m=ax1.scatter(data[<span class="hljs-string">&quot;vaccinated&quot;</span>],data[event]/data[<span class="hljs-string">&quot;population&quot;</span>]*<span class="hljs-number">100</span>_000,</span><br><span class="line">                c=P,norm=norm,cmap=<span class="hljs-string">&quot;Blues&quot;</span>,label=event)</span><br><span class="line">    plt.colorbar(m,label=<span class="hljs-string">&quot;State Population&quot;</span>)</span><br><span class="line">    x=np.linspace(<span class="hljs-number">0.3</span>,<span class="hljs-number">0.75</span>,<span class="hljs-number">201</span>)</span><br><span class="line">    x= pd.DataFrame({<span class="hljs-string">&apos;vaccinated&apos;</span>:x, <span class="hljs-string">&apos;T&apos;</span>:<span class="hljs-number">31</span>, <span class="hljs-string">&apos;T2&apos;</span>:<span class="hljs-number">31</span>*<span class="hljs-number">31</span>})</span><br><span class="line">    x[<span class="hljs-string">&quot;const&quot;</span>]=np.ones(<span class="hljs-number">201</span>)</span><br><span class="line">    y_pred=res.predict(x)</span><br><span class="line">    ax1.plot(x.vaccinated, y_pred*<span class="hljs-number">100</span>_000,<span class="hljs-string">&quot;k--&quot;</span>,label=<span class="hljs-string">&quot;predicted&quot;</span>) </span><br><span class="line">    </span><br><span class="line">    idx = data.index</span><br><span class="line">    ax2.scatter(data[<span class="hljs-string">&quot;vaccinated&quot;</span>], res.resid[idx],</span><br><span class="line">                c=P,norm=norm,cmap=<span class="hljs-string">&quot;Blues&quot;</span>,label=event)</span><br><span class="line">    ax2.set_ybound(lower=<span class="hljs-number">-0.00008</span>,upper=<span class="hljs-number">0.00008</span>)</span><br><span class="line">    ax2.set_title(<span class="hljs-string">&quot;Residuals&quot;</span>)</span><br><span class="line">    ax2.set_xlabel(<span class="hljs-string">&quot;vaccination&quot;</span>)</span><br><span class="line">    ax2.set_ylabel(<span class="hljs-string">&quot;residual&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment"># select outlier state</span></span><br><span class="line">    outlier_idx=np.argpartition(np.array(res.resid[idx]), <span class="hljs-number">-2</span>)[<span class="hljs-number">-2</span>:]</span><br><span class="line">    </span><br><span class="line">    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> outlier_idx:</span><br><span class="line">        outlier=data.iloc[i]</span><br><span class="line">        ax1.annotate(outlier[<span class="hljs-string">&quot;state&quot;</span>],(outlier[<span class="hljs-string">&quot;vaccinated&quot;</span>]+<span class="hljs-number">0.01</span>,outlier[event]/outlier[<span class="hljs-string">&quot;population&quot;</span>]*<span class="hljs-number">100</span>_000))</span><br><span class="line">        ax2.annotate(outlier[<span class="hljs-string">&quot;state&quot;</span>],(outlier[<span class="hljs-string">&quot;vaccinated&quot;</span>]+<span class="hljs-number">0.01</span>,res.resid[idx].iloc[i]))</span><br></pre></td></tr></tbody></table></figure>
 
@@ -440,25 +441,25 @@ Calculate the R-squared again, still, not good enough.So let&apos;s take a deep 
 <li>residual variance is negatively correlated with vaccinations rate i.e., smaller vaccination rates have larger magnitude residuals. A <strong>Poisson model</strong> can fix those issues, which will be the topic of our next blog.</li>
 <li>Some states like FL and KY look like outliers, indicating that they may have different intercepts than the others, which is not surprising as states are different subjects and each may have unique fundamentals. A <strong>mixed model</strong> would be a good solution for this. </li>
 </ul>
-<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">plot_residuals(last_data,event,res)</span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">plot_residuals(last_data,event,res)</span><br><span class="line"></span><br></pre></td></tr></tbody></table></figure>
+
+<img src="http://yumeng-li.github.io/projectcovid_files/projectcovid_49_0.png">
 
 
-<p><img src="projectcovid_files/projectcovid_49_0.png" alt="png"></p>
 <h2 id="Model-Prediction"><a href="#Model-Prediction" class="headerlink" title="Model Prediction"></a>Model Prediction</h2><p>We will now use the model <strong>without recalibrating</strong> to make predictions about admission rates on new data.</p>
 <p>This is <strong>out of sample</strong> evaluation. It is the only way to make sure the model really works.</p>
 <h3 id="Out-of-Sample-Model-Fit"><a href="#Out-of-Sample-Model-Fit" class="headerlink" title="Out of Sample Model Fit"></a>Out of Sample Model Fit</h3><p>Besides greater residuals, the out of sample evaluation is basically telling us a same story. </p>
 <figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">covid.plot_time_facets(test_data,res,event,date0)</span><br></pre></td></tr></tbody></table></figure>
 
+<img src="http://yumeng-li.github.io/projectcovid_files/projectcovid_53_0.png">
 
-<p><img src="projectcovid_files/projectcovid_53_0.png" alt="png"></p>
+
 <h2 id="Day-of-the-Week-Effects"><a href="#Day-of-the-Week-Effects" class="headerlink" title="Day of the Week Effects"></a>Day of the Week Effects</h2><p>Before we move on to GLM, there&#x2019;s another trick to play with. The data reporting obviously has day of the week effects,</p>
 <figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">aggregate=data.groupby([<span class="hljs-string">&quot;date&quot;</span>])[event].sum()</span><br><span class="line">aggregate=aggregate.to_frame().reset_index()</span><br><span class="line">aggregate.plot(x=<span class="hljs-string">&quot;date&quot;</span>,y=event)</span><br></pre></td></tr></tbody></table></figure>
 
+<img src="http://yumeng-li.github.io/projectcovid_files/projectcovid_55_0.png">
 
 
-
-<pre><code>&lt;matplotlib.axes._subplots.AxesSubplot at 0x7fbcef818950&gt;</code></pre>
-<p><img src="projectcovid_files/projectcovid_55_1.png" alt="png"></p>
 <p>We use a new function to generate the train data, more dummy variables are added to represent days of a week,</p>
 <figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">define_variables2</span>(<span class="hljs-params">data,date0</span>):</span></span><br><span class="line">        N=len(data)</span><br><span class="line">        T=(data[<span class="hljs-string">&quot;date&quot;</span>]-date0).dt.days</span><br><span class="line">        X=data[<span class="hljs-string">&quot;vaccinated&quot;</span>].copy().to_frame()</span><br><span class="line">        X[<span class="hljs-string">&quot;T&quot;</span>]=T</span><br><span class="line">        X[<span class="hljs-string">&quot;T2&quot;</span>]=T**<span class="hljs-number">2</span></span><br><span class="line">        X[<span class="hljs-string">&quot;const&quot;</span>]=np.ones(N)</span><br><span class="line">        Z=pd.get_dummies(data[<span class="hljs-string">&quot;date&quot;</span>].dt.day_name(),drop_first=<span class="hljs-literal">True</span>)</span><br><span class="line">        X=pd.concat([X,Z],axis=<span class="hljs-number">1</span>)</span><br><span class="line">        P=data[<span class="hljs-string">&quot;population&quot;</span>]</span><br><span class="line">        <span class="hljs-keyword">return</span> X,P</span><br></pre></td></tr></tbody></table></figure>
 
