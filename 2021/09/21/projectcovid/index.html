@@ -23,16 +23,16 @@
 <meta property="og:site_name" content="YumengsQuantLab">
 <meta property="og:description" content="Lately I&amp;#x2019;ve been working on a project projecting credit loss for mortgages with a bunch of loan-level attributes. To be honest, the data wasn&amp;#x2019;t rich. In pursuit of good predictive power,">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://yoursite.com/2021/09/21/projectcovid/projectcovid_files/projectcovid_43_0.png">
+<meta property="og:image" content="http://yumeng-li.github.io/projectcovid_files/projectcovid_43_0.png">
 <meta property="og:image" content="http://yoursite.com/2021/09/21/projectcovid/projectcovid_files/projectcovid_45_0.png">
 <meta property="og:image" content="http://yoursite.com/2021/09/21/projectcovid/projectcovid_files/projectcovid_49_0.png">
 <meta property="og:image" content="http://yoursite.com/2021/09/21/projectcovid/projectcovid_files/projectcovid_53_0.png">
 <meta property="og:image" content="http://yoursite.com/2021/09/21/projectcovid/projectcovid_files/projectcovid_55_1.png">
 <meta property="article:published_time" content="2021-09-21T20:37:06.431Z">
-<meta property="article:modified_time" content="2021-09-21T21:12:19.409Z">
+<meta property="article:modified_time" content="2021-09-21T21:41:39.803Z">
 <meta property="article:author" content="Yumeng Li">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://yoursite.com/2021/09/21/projectcovid/projectcovid_files/projectcovid_43_0.png">
+<meta name="twitter:image" content="http://yumeng-li.github.io/projectcovid_files/projectcovid_43_0.png">
 
 
 
@@ -144,7 +144,7 @@
         <span class="column is-narrow">
             
             
-            17 minutes read (About 2481 words)
+            17 minutes read (About 2476 words)
         </span>
         
     </div>
@@ -421,9 +421,9 @@ Calculate the R-squared again, still, not good enough.So let&apos;s take a deep 
 <pre><code>0.3726019173009557</code></pre>
 <h3 id="Extrapolation-of-Time-trends"><a href="#Extrapolation-of-Time-trends" class="headerlink" title="Extrapolation of Time trends"></a>Extrapolation of Time trends</h3><p>The linear model projects the admission to be increasing steadily if assuming current vaccination rate.</p>
 <figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">covid.plot_time_extrapolation(train_data,res,event,date0)</span><br></pre></td></tr></tbody></table></figure>
+<img src="http://yumeng-li.github.io/projectcovid_files/projectcovid_43_0.png">
 
 
-<p><img src="projectcovid_files/projectcovid_43_0.png" alt="png"></p>
 <h3 id="In-sample-model-Fit"><a href="#In-sample-model-Fit" class="headerlink" title="In-sample model Fit"></a>In-sample model Fit</h3><p>To better evaluate the model fit, we visualize the real observations and model prodictions. Here&#x2019;s some <strong>snapshots</strong> of the fit for a few selected dates on the training period. </p>
 <p>Observations are arranged by state and date.</p>
 <p>Don&#x2019;t have to say much, you can tell the weighted linear model doesn&#x2019;t fit well as the corelation between vaccinations and admissions looks more like a curve than a straight line.</p>

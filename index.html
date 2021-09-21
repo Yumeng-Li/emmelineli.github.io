@@ -135,7 +135,7 @@
         <span class="column is-narrow">
             
             
-            17 minutes read (About 2481 words)
+            17 minutes read (About 2476 words)
         </span>
         
     </div>
@@ -412,9 +412,9 @@ Calculate the R-squared again, still, not good enough.So let&apos;s take a deep 
 <pre><code>0.3726019173009557</code></pre>
 <h3 id="Extrapolation-of-Time-trends"><a href="#Extrapolation-of-Time-trends" class="headerlink" title="Extrapolation of Time trends"></a>Extrapolation of Time trends</h3><p>The linear model projects the admission to be increasing steadily if assuming current vaccination rate.</p>
 <figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">covid.plot_time_extrapolation(train_data,res,event,date0)</span><br></pre></td></tr></tbody></table></figure>
+<img src="http://yumeng-li.github.io/projectcovid_files/projectcovid_43_0.png">
 
 
-<p><img src="projectcovid_files/projectcovid_43_0.png" alt="png"></p>
 <h3 id="In-sample-model-Fit"><a href="#In-sample-model-Fit" class="headerlink" title="In-sample model Fit"></a>In-sample model Fit</h3><p>To better evaluate the model fit, we visualize the real observations and model prodictions. Here&#x2019;s some <strong>snapshots</strong> of the fit for a few selected dates on the training period. </p>
 <p>Observations are arranged by state and date.</p>
 <p>Don&#x2019;t have to say much, you can tell the weighted linear model doesn&#x2019;t fit well as the corelation between vaccinations and admissions looks more like a curve than a straight line.</p>
