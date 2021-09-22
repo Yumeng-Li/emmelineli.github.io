@@ -16,12 +16,12 @@
 
 
 
-    <meta name="description" content="Lately I&amp;#x2019;ve been working on a project projecting credit loss for mortgages with a bunch of loan-level attributes. To be honest, the data wasn&amp;#x2019;t rich. In pursuit of good predictive power,">
+    <meta name="description" content="Lately I&amp;#x2019;ve been working on a project predicting credit losses for mortgages with a bunch of loan-level attributes. To be honest, the data wasn&amp;#x2019;t rich. In pursuit of good predictive powe">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Project Covid Admissions Based on Vaccine Progress, Part 1 -- How Powerful Can Regressions Be? From Simple Linear Regressions to Weighted Time Series Regressions">
 <meta property="og:url" content="http://yoursite.com/2021/09/21/projectcovid/index.html">
 <meta property="og:site_name" content="YumengsQuantLab">
-<meta property="og:description" content="Lately I&amp;#x2019;ve been working on a project projecting credit loss for mortgages with a bunch of loan-level attributes. To be honest, the data wasn&amp;#x2019;t rich. In pursuit of good predictive power,">
+<meta property="og:description" content="Lately I&amp;#x2019;ve been working on a project predicting credit losses for mortgages with a bunch of loan-level attributes. To be honest, the data wasn&amp;#x2019;t rich. In pursuit of good predictive powe">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://yumeng-li.github.io/projectcovid_files/projectcovid_43_0.png">
 <meta property="og:image" content="http://yumeng-li.github.io/projectcovid_files/projectcovid_45_0.png">
@@ -29,7 +29,7 @@
 <meta property="og:image" content="http://yumeng-li.github.io/projectcovid_files/projectcovid_53_0.png">
 <meta property="og:image" content="http://yumeng-li.github.io/projectcovid_files/projectcovid_55_1.png">
 <meta property="article:published_time" content="2021-09-21T20:37:06.431Z">
-<meta property="article:modified_time" content="2021-09-21T21:58:56.935Z">
+<meta property="article:modified_time" content="2021-09-22T00:12:10.302Z">
 <meta property="article:author" content="Yumeng Li">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://yumeng-li.github.io/projectcovid_files/projectcovid_43_0.png">
@@ -144,14 +144,14 @@
         <span class="column is-narrow">
             
             
-            16 minutes read (About 2456 words)
+            16 minutes read (About 2473 words)
         </span>
         
     </div>
     <div class="article-entry is-size-6-mobile" itemprop="articleBody">
     
-        <html><head></head><body><p>Lately I&#x2019;ve been working on a project projecting credit loss for mortgages with a bunch of loan-level attributes. To be honest, the data wasn&#x2019;t rich. In pursuit of good predictive power, we had to try from the simple multi-period regression, to generalized linear model with distributions beyond the Gaussian family, then mixed effect models, and even used some curve fitting techniques like splines at last to fix the oversimple (or wrong) assumptions we made at the beginning. Overall, I think the journey was inspiring as when it comes to predictive modeling, people always turn to linear regressions first, which isn&#x2019;t wrong, just so you know the linear regression models and the OLS make a number of assumptions about the predictor variables, the response variable, and their relationship. Violating these assumptions results in biased models or imprecise coefficient, in short cause your model to be less predictive.</p>
-<p>Well, the good news is that there are numerous extensions have been developed that allow each of these assumptions to be relaxed, and in some cases eliminated entirely, but only if you know what they are and when to use them. More commonly, I see people get stuck and choose to live with a just-fine fit model without knowing that they can easily fix it employing a variation of the regression models. Now let&#x2019;s see how powerful regressions can get through a very trendy modeling case - project covid admissions based on the vaccinate progress.</p>
+        <html><head></head><body><p>Lately I&#x2019;ve been working on a project predicting credit losses for mortgages with a bunch of loan-level attributes. To be honest, the data wasn&#x2019;t rich. In pursuit of good predictive power, I had to try from the simple multi-period regression, to generalized linear model with distributions beyond the Gaussian family, then mixed effect models, and even used some curve fitting techniques like splines at last to fix the oversimple (or wrong) assumptions I made at the beginning. Overall, I think the journey was inspiring as it basically shows that one can almost crack any problem with regression analysis, more importantly, in an elegant way.</p>
+<p>When it comes to predictive modeling, people always turn to linear regressions, which isn&#x2019;t wrong, just so you know that linear regression models and OLS make a number of assumptions about the predictor variables, the response variable, and their relationship. Violating these assumptions can result in biased predictions or imprecise coefficients, in short cause your model to be less predictive. Well, the good news is that there are numerous extensions have been developed that allow each of these assumptions to be relaxed, and in some cases eliminated entirely, but only if you know what they are and when to use them. More commonly, I see people get stuck and choose to live with a just-fine-fit model without knowing that they can easily fix it by employing a more generalized regression models. Now let&#x2019;s see how powerful regressions can get through a trendy modeling case - project covid admissions based on the vaccinate progress.</p>
 <h2 id="Preliminaries"><a href="#Preliminaries" class="headerlink" title="Preliminaries"></a>Preliminaries</h2><figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np</span><br><span class="line"><span class="hljs-keyword">import</span> pandas <span class="hljs-keyword">as</span> pd</span><br><span class="line"><span class="hljs-keyword">import</span> matplotlib.pyplot <span class="hljs-keyword">as</span> plt</span><br><span class="line"><span class="hljs-keyword">import</span> matplotlib.colors</span><br><span class="line"><span class="hljs-keyword">import</span> seaborn <span class="hljs-keyword">as</span> sns</span><br><span class="line"><span class="hljs-keyword">import</span> statsmodels.api <span class="hljs-keyword">as</span> sm</span><br><span class="line"><span class="hljs-keyword">import</span> sys</span><br><span class="line"><span class="hljs-keyword">import</span> covid_analysis <span class="hljs-keyword">as</span> covid <span class="hljs-comment"># some functions developed for this blog</span></span><br></pre></td></tr></tbody></table></figure>
 
 <p>The data I use includes hospital admissions and vaccinations from the CDC website, and the most up-to-date populations by state from the US Census Bureau.</p>
@@ -159,8 +159,6 @@
 
 
 <figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">hospitalizations=pd.read_csv(<span class="hljs-string">f&quot;<span class="hljs-subst">{data_dir}</span>/covid_hospitalizations.csv&quot;</span>,parse_dates=[<span class="hljs-string">&quot;date&quot;</span>])</span><br><span class="line">vaccinations=pd.read_csv(<span class="hljs-string">f&quot;<span class="hljs-subst">{data_dir}</span>/covid_vaccinations.csv&quot;</span>,parse_dates=[<span class="hljs-string">&quot;date&quot;</span>])</span><br><span class="line">population=pd.read_csv(<span class="hljs-string">f&quot;<span class="hljs-subst">{data_dir}</span>/population.csv&quot;</span>)</span><br><span class="line"></span><br><span class="line">event=<span class="hljs-string">&quot;admissions&quot;</span></span><br><span class="line">data=hospitalizations</span><br><span class="line"></span><br><span class="line">data=data.merge(vaccinations,on=[<span class="hljs-string">&quot;date&quot;</span>,<span class="hljs-string">&quot;state&quot;</span>])</span><br><span class="line">data=data.merge(population,on=<span class="hljs-string">&quot;state&quot;</span>)</span><br><span class="line">data[<span class="hljs-string">&quot;vaccinated&quot;</span>]=data[<span class="hljs-string">&quot;vaccinated&quot;</span>]/data[<span class="hljs-string">&quot;population&quot;</span>]</span><br><span class="line">data.head()</span><br></pre></td></tr></tbody></table></figure>
-
-
 
 
 <div>
