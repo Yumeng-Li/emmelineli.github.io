@@ -33,7 +33,7 @@
 <meta property="og:image" content="http://yumeng-li.github.io/VECM_files/VECM_32_1.png">
 <meta property="og:image" content="http://yumeng-li.github.io/VECM_files/VECM_44_1.png">
 <meta property="article:published_time" content="2021-11-17T04:58:51.109Z">
-<meta property="article:modified_time" content="2021-11-17T05:51:17.063Z">
+<meta property="article:modified_time" content="2021-11-17T06:05:55.586Z">
 <meta property="article:author" content="Yumeng Li">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://yumeng-li.github.io/VECM_files/VECM_14_0.png">
@@ -148,7 +148,7 @@
         <span class="column is-narrow">
             
             
-            29 minutes read (About 4314 words)
+            28 minutes read (About 4176 words)
         </span>
         
     </div>
@@ -285,16 +285,13 @@ gov_transfers: Personal current transfer payments</code></pre>
 <img src="http://yumeng-li.github.io/VECM_files/VECM_29_0.png">
 
 
-<p>Based on the theory, we can assume that there is a negative correlation between income inequality and consumption. Here I created an inequality indicator using the difference in shares of wealth of the top 10% and the bottom 50%, so that we can further look into the change of inequality over the last half century. The long-term trend is estimated using the HP filter, which can smooth the data by getting rid of the short-term fluctuations (shorter cycles).</p>
+<p>Based on the theory, we can assume that there is a negative correlation between income inequality and consumption. Here I created an inequality indicator using the difference in shares of wealth of the top 10% and the bottom 50%, so that we can further look into the change of inequality over the last half century. The long-term trend is estimated using the <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Hodrick%E2%80%93Prescott_filter"><strong>Hodrick&#x2013;Prescott filter</strong></a>, which can smooth the data by getting rid of the short-term fluctuations (shorter cycles).</p>
 <figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">wealth_inequality.index = pd.to_datetime(wealth_inequality.index, format=<span class="hljs-string">&apos;%Y&apos;</span>)</span><br><span class="line"><span class="hljs-comment"># create a variable nw_inequlity for the wealth gap between top 10% and bottom 50%</span></span><br><span class="line">wealth_inequality[<span class="hljs-string">&apos;nw_inequality&apos;</span>] = wealth_inequality[<span class="hljs-string">&apos;sw_p90p100&apos;</span>]-wealth_inequality[<span class="hljs-string">&apos;sw_p50p90&apos;</span>]</span><br><span class="line"><span class="hljs-comment"># apply the Hodrick-Prescott filter to smooth the inequality data and estimate the long-term trend</span></span><br><span class="line">wealth_inequality[<span class="hljs-string">&apos;f_nw_inequality&apos;</span>] = pd.DataFrame(filters.hp_filter.hpfilter(wealth_inequality[<span class="hljs-string">&apos;nw_inequality&apos;</span>],lamb=<span class="hljs-number">6.25</span>)[<span class="hljs-number">1</span>])</span><br></pre></td></tr></tbody></table></figure>
 
 
 <figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">f, (ax1, ax2) = plt.subplots(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,figsize=(<span class="hljs-number">15</span>,<span class="hljs-number">4</span>))</span><br><span class="line">ax1.plot(wealth_inequality[<span class="hljs-string">&apos;nw_inequality&apos;</span>])</span><br><span class="line">ax2.plot(wealth_inequality[<span class="hljs-string">&apos;f_nw_inequality&apos;</span>])</span><br><span class="line">ax1.set_title(<span class="hljs-string">&apos;nw inequality&apos;</span>)</span><br><span class="line">ax2.set_title(<span class="hljs-string">&apos;filtered nw inequality (trend)&apos;</span>)</span><br></pre></td></tr></tbody></table></figure>
 
 
-
-
-<pre><code>Text(0.5, 1.0, &apos;filtered nw inequality (trend)&apos;)</code></pre>
 <img src="http://yumeng-li.github.io/VECM_files/VECM_32_1.png">
 
 
@@ -551,13 +548,7 @@ ADF p-value: 0.309007
 non-stationary - null hypothesis of a unit root cannot be rejected at a 5% significant level
 KPSS Statistic: 2.297233
 KPSS p-value: 0.010000
-non-stationary - null hypothesis of stationary can be rejected at a 5% significant level
-
-
-C:\Users\yli205\AppData\Roaming\Python\Python37\site-packages\statsmodels\tsa\stattools.py:1999: InterpolationWarning: The test statistic is outside of the range of p-values available in the
-look-up table. The actual p-value is smaller than the p-value returned.
-
-  warn_msg.format(direction=&quot;smaller&quot;), InterpolationWarning</code></pre>
+non-stationary - null hypothesis of stationary can be rejected at a 5% significant level</code></pre>
 <figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">augmented_dickey_fuller_test(train[<span class="hljs-string">&apos;ln_rdy&apos;</span>])</span><br><span class="line">kpss_test(train[<span class="hljs-string">&apos;ln_rdy&apos;</span>])</span><br></pre></td></tr></tbody></table></figure>
 
 <pre><code>ADF Statistic: -2.970069
@@ -565,13 +556,7 @@ ADF p-value: 0.037786
 stationary - null hypothesis of a unit root can be rejected at a 5% significant level
 KPSS Statistic: 2.292161
 KPSS p-value: 0.010000
-non-stationary - null hypothesis of stationary can be rejected at a 5% significant level
-
-
-C:\Users\yli205\AppData\Roaming\Python\Python37\site-packages\statsmodels\tsa\stattools.py:1999: InterpolationWarning: The test statistic is outside of the range of p-values available in the
-look-up table. The actual p-value is smaller than the p-value returned.
-
-  warn_msg.format(direction=&quot;smaller&quot;), InterpolationWarning</code></pre>
+non-stationary - null hypothesis of stationary can be rejected at a 5% significant level</code></pre>
 <figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">augmented_dickey_fuller_test(train[<span class="hljs-string">&apos;ln_rnw&apos;</span>])</span><br><span class="line">kpss_test(train[<span class="hljs-string">&apos;ln_rnw&apos;</span>])</span><br></pre></td></tr></tbody></table></figure>
 
 <pre><code>ADF Statistic: -0.266563
@@ -579,13 +564,7 @@ ADF p-value: 0.930108
 non-stationary - null hypothesis of a unit root cannot be rejected at a 5% significant level
 KPSS Statistic: 2.300497
 KPSS p-value: 0.010000
-non-stationary - null hypothesis of stationary can be rejected at a 5% significant level
-
-
-C:\Users\yli205\AppData\Roaming\Python\Python37\site-packages\statsmodels\tsa\stattools.py:1999: InterpolationWarning: The test statistic is outside of the range of p-values available in the
-look-up table. The actual p-value is smaller than the p-value returned.
-
-  warn_msg.format(direction=&quot;smaller&quot;), InterpolationWarning</code></pre>
+non-stationary - null hypothesis of stationary can be rejected at a 5% significant level</code></pre>
 <p>None of the variables can be considered stationary with the two tests. We can therefore ask whether the variables form a cointegrated system with a given number of &#x201C;common trends&#x201D;. <strong>Intuitively, I would argue that there exist one cointegration equation among the three variables as in the long run, one&#x2019;s amount consumed and wealth accumulated should be equal to the income that one earns.</strong> </p>
 <p>We will discuss how to test for cointegration relationships and how to estimate them using a vector error correction model in the next blog.</p>
 </body></html>
