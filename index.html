@@ -601,7 +601,7 @@ look-up table. The actual p-value is smaller than the p-value returned.
         <span class="column is-narrow">
             
             
-            26 minutes read (About 3937 words)
+            26 minutes read (About 3889 words)
         </span>
         
     </div>
@@ -745,13 +745,7 @@ ADF p-value: 0.000018
 stationary - null hypothesis of a unit root can be rejected at a 5% significant level
 KPSS Statistic: 0.172896
 KPSS p-value: 0.100000
-stationary - null hypothesis of stationary cannot be rejected at a 5% significant level
-
-
-C:\Users\yli205\AppData\Roaming\Python\Python37\site-packages\statsmodels\tsa\stattools.py:2003: InterpolationWarning: The test statistic is outside of the range of p-values available in the
-look-up table. The actual p-value is greater than the p-value returned.
-
-  warn_msg.format(direction=&quot;greater&quot;), InterpolationWarning</code></pre>
+stationary - null hypothesis of stationary cannot be rejected at a 5% significant level</code></pre>
 <p>Let&#x2019;s adding these new variables to the dataframe.</p>
 <figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">df[<span class="hljs-string">&apos;d_unemp&apos;</span>] = df[<span class="hljs-string">&apos;unemp&apos;</span>].diff()</span><br><span class="line">df[<span class="hljs-string">&apos;ln_consumer_confidence&apos;</span>] = np.log(df[<span class="hljs-string">&apos;consumer_confidence&apos;</span>])</span><br><span class="line">df[<span class="hljs-string">&apos;d_ln_m2&apos;</span>] = np.log(df[<span class="hljs-string">&apos;m2&apos;</span>]).diff()</span><br><span class="line">df[<span class="hljs-string">&apos;d_dff&apos;</span>] = df[<span class="hljs-string">&apos;dff&apos;</span>].diff()</span><br><span class="line">df[<span class="hljs-string">&apos;spread_10y3m&apos;</span>] = df[<span class="hljs-string">&apos;yield_10y&apos;</span>]-df[<span class="hljs-string">&apos;yield_3m&apos;</span>]</span><br><span class="line"></span><br><span class="line">train,test = df[<span class="hljs-number">1</span>:cut], df[cut:]</span><br></pre></td></tr></tbody></table></figure>
 
