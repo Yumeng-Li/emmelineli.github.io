@@ -23,6 +23,7 @@
 <meta property="og:site_name" content="YumengsQuantLab">
 <meta property="og:description" content="It&amp;#x2019;s official on Nov.3rd that the Federal Reserve is winding down its aggressive pandemic-era asset purchasing, or as what we call &amp;#x201C;tapering&amp;#x201D;. The announcement actually didn&amp;#x201">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://yumeng-li.github.io/VECM_files/flowchart.png">
 <meta property="og:image" content="http://yumeng-li.github.io/VECM_files/VECM_14_0.png">
 <meta property="og:image" content="http://yumeng-li.github.io/VECM_files/VECM_15_0.png">
 <meta property="og:image" content="http://yumeng-li.github.io/VECM_files/VECM_16_0.png">
@@ -33,10 +34,10 @@
 <meta property="og:image" content="http://yumeng-li.github.io/VECM_files/VECM_32_1.png">
 <meta property="og:image" content="http://yumeng-li.github.io/VECM_files/VECM_44_1.png">
 <meta property="article:published_time" content="2021-11-17T04:58:51.109Z">
-<meta property="article:modified_time" content="2021-11-18T21:36:16.539Z">
+<meta property="article:modified_time" content="2021-11-18T21:47:38.199Z">
 <meta property="article:author" content="Yumeng Li">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://yumeng-li.github.io/VECM_files/VECM_14_0.png">
+<meta name="twitter:image" content="http://yumeng-li.github.io/VECM_files/flowchart.png">
 
 
 
@@ -148,14 +149,17 @@
         <span class="column is-narrow">
             
             
-            29 minutes read (About 4344 words)
+            29 minutes read (About 4356 words)
         </span>
         
     </div>
     <div class="article-entry is-size-6-mobile" itemprop="articleBody">
     
         <html><head></head><body><p>It&#x2019;s official on Nov.3rd that the Federal Reserve is winding down its aggressive pandemic-era asset purchasing, or as what we call &#x201C;tapering&#x201D;. The announcement actually didn&#x2019;t come out as a surprise since Fed officials had been laying the groundwork for policy tightening as the economy gradually recovered from the Covid19 slump. Furthermore, due to the lately surging inflation readings, we are seeing traders start to bet on faster Fed hikes. So it seems interesting to get some ideas of how the post-pandemic consumption behaviors of the American households would be, and quantify the potential impact of policy shifting on these behaviors using two classic time series models - the <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Vector_autoregression">Vector Autoregression (VAR)</a> and the <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Error_correction_model#VECM">Vector Error Correction Model (VECM)</a>. Tribute to Christopher Sims who first promoted the use of VAR in empirical macroeconomics. </p>
-<p>I will start the modeling with explaining some of the economic theories behind predicting real consumption.</p>
+<p>We will build the models following the steps below, </p>
+<img src="http://yumeng-li.github.io/VECM_files/flowchart.png">
+
+<p>And before we get onto that, I will first introduce some of the economic theories behind predicting real consumption.</p>
 <h3 id="Economic-Intuitions-Behind"><a href="#Economic-Intuitions-Behind" class="headerlink" title="Economic Intuitions Behind"></a>Economic Intuitions Behind</h3><p>Let&#x2019;s first recap some of the main determinants of private consumption,</p>
 <ul>
 <li>Disposable Income (in the current period) (+)</li>
